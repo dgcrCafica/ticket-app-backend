@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniChat</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class='container'>
+  <h1 class='mt-5'>MiniChat</h1>
+
+  <hr>
+
+  <form action="#" id='myForm'>
+    <div class="row">
+      <div class="col-8">
+        <input type="text" id='txtMessage' placeholder="Mensaje" class='form-control'>
+      </div>
+
+      <div class="col-4">
+        <button type='submit' class='btn btn-primary'>Enviar</button>
+      </div>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col">
+      <ul id='myMessages' class='mt-2'>
+        <!-- <li>Hola</li>
+        <li>Mundo</li>
+        <li>David</li>
+        <li>Geo</li> -->
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js" integrity="sha512-PU5S6BA03fRv1Q5fpwXjg5nlRrgdoguZ74urFInkbABMCENyx5oP3hrDzYMMPh3qdLdknIvrGj3yqZ4JuU7Nag==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const socket = io('http://localhost:8080');
+
+    const form     = document.querySelector('#myForm');
+    const messages = document.querySelector('#myMessages');
+    const txtMsg   = document.querySelector('#txtMessage');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newMsg = txtMsg.value;
+
+      socket.emit('message-to-server', {
+        msg: newMsg,
+      });
+    })
+
+    socket.on('message-from-server', ( data ) => {
+      messages.innerHTML += `<li>${ data.msg }</li>`;
+    })
+
+    // socket.on('mensaje-bienvenida', ( data ) => {
+    //   console.log({ data });
+    // });
+
+    // setTimeout(() => {
+    //   socket.emit('mensaje-cliente', {
+    //     msg: 'cliente',
+    //     nombre: 'David',
+    //   });
+    // }, 2000);
+  </script>
+</body>
+</html>

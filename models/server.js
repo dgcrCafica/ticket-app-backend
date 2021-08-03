@@ -16,26 +16,37 @@ class Server {
 
     // Configuración de socket
     this.io = socketIO( this.server, { /** Configuraciones */ });
+
+    // Inicializar sockets
+    this.sockets = new Sockets( this.io );
   }
 
   middlewares() {
     // Configurar el directorio público
     this.app.use( express.static( path.resolve( __dirname, '../public' ) ) );
 
-    /** CORS */
+    // CORS
     this.app.use( cors() );
+
+    // API REST
+    this.app.get('/ultimos', (req, res) => {
+      res.json({
+        ok: true,
+        ultimos: this.sockets.ticketList.ultimos13,
+      });
+    });
   }
 
-  configSockets() {
-    new Sockets( this.io );
-  }
+  // configSockets() {
+  //   new Sockets( this.io );
+  // }
 
   execute() {
     // Inicializar middlewares
     this.middlewares();
 
     // Inicializar sockets
-    this.configSockets();
+    // this.configSockets();
 
     // Inicializar server
     this.server.listen(this.port, () => {
